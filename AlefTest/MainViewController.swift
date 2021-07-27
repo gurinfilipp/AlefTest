@@ -11,16 +11,34 @@ import PinLayout
 class MainViewController: UIViewController {
     
     private let tableView: UITableView = {
-        let tableView = UITableView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height), style: .grouped)
-        
+        let tableView = UITableView(frame: CGRect(), style: .insetGrouped)
         
         return tableView
     }()
+    
+    
+    
+    private var addButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Добавить данные о ребенке", for: .normal)
+        button.backgroundColor = .yellow
+        button.layer.cornerRadius = 5
+        button.layer.shadowColor = UIColor.red.cgColor
+        button.layer.shadowRadius = 3
+        button.layer.shadowOffset = CGSize(width: 3, height: 2)
+        button.layer.shadowOpacity = 10
+        button.tintColor = .black
+        return button
+    }()
+    
+    var numberOfSections: Int = 1
+    var numberOfRowsInSection: Int = 5
     
     var firstNameCell: UITableViewCell = UITableViewCell()
     var lastNameCell: UITableViewCell = UITableViewCell()
     var patronymicCell: UITableViewCell = UITableViewCell()
     var ageCell: UITableViewCell = UITableViewCell()
+    var addChildCell: UITableViewCell = UITableViewCell()
     
     var firstNameTextField: UITextField = UITextField()
     var lastNameTextField: UITextField = UITextField()
@@ -29,9 +47,16 @@ class MainViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard (_:)))
+        self.view.addGestureRecognizer(tapGesture)
+        
         view.addSubview(tableView)
+        view.addSubview(addButton)
         title = "Введите данные о семье"
         setupTableView()
+        view.backgroundColor = .orange
+        addButton.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
         
         self.lastNameCell.backgroundColor = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 0.5)
         self.lastNameTextField = UITextField(frame: CGRect(x: 15, y: 0, width: self.lastNameCell.contentView.bounds.width, height: 50))
@@ -56,7 +81,8 @@ class MainViewController: UIViewController {
         ageTextField.textContentType = .telephoneNumber
         self.ageCell.addSubview(self.ageTextField)
         
-        
+        self.addChildCell.backgroundColor = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 0.5)
+        self.addChildCell.textLabel?.text = "+ Добавить ребенка"
         //ageTextField.backgroundColor = .red
     }
     
@@ -65,13 +91,27 @@ class MainViewController: UIViewController {
         tableView.dataSource = self
         tableView.tableFooterView = UIView()
         tableView.backgroundColor = .systemGroupedBackground
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
         
+    }
+    
+    @objc private func addButtonTapped() {
+        print("wow")
+        self.numberOfSections += 1
+        tableView.reloadData()
+    }
+    
+    @objc func dismissKeyboard (_ sender: UITapGestureRecognizer) {
+        [firstNameTextField, lastNameTextField, ageTextField, patronymicTextField].forEach {
+            $0.resignFirstResponder()
+        }
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
         tableView.pin.all()
+        addButton.pin.horizontally(30).bottom(30).height(60)
     }
     
     
@@ -80,27 +120,29 @@ class MainViewController: UIViewController {
 
 extension MainViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch section {
-        case 0:
-            return 4
-        default:
-            return 0
-        }
+        return 4
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        switch(indexPath.section) {
-        case 0:
-            switch(indexPath.row) {
-            case 0: return self.lastNameCell
-            case 1: return self.firstNameCell
-            case 2: return self.patronymicCell
-            case 3: return self.ageCell
-            default: fatalError("Unknown row in section 0")
-            }
-            
-        default: fatalError("Unknown section")
+       // var cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+        var cell: UITableViewCell?
+        if indexPath.row == 0 {
+            cell = self.lastNameCell
+        } else if indexPath.row == 1 {
+            cell = self.firstNameCell
+        } else if indexPath.row == 2 {
+            cell = self.patronymicCell
+        } else if indexPath.row == 3 {
+            cell = self.ageCell
+        } else {
+            cell = UITableViewCell()
         }
+        
+        return cell!
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -108,9 +150,16 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return "Введите Ваши данные"
+        switch section {
+        case 0: return "Введите ваши данные"
+        default: return "Введите данные ребенка"
+        }
     }
     
     
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        print("will display cell \(indexPath)")
+    }
     
 }
