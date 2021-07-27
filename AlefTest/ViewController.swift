@@ -1,0 +1,19 @@
+//
+//  ViewController.swift
+//  AlefTest
+//
+//  Created by Филипп Гурин on 27.07.2021.
+//
+
+import UIKit
+
+class ViewController: UIViewController {
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        // Do any additional setup after loading the view.
+    }
+
+
+}
+
