@@ -16,14 +16,27 @@ class MainViewController: UIViewController {
         return tableView
     }()
     
+    var persons: [Person] = [Person(firstName: "fds", lastName: "sdf", patronymic: "qe", age: 12)] {
+        didSet {
+            print("persons is chaging \(persons)")
+            print(persons.count)
+        }
+    }
     
+    func report(text: String, in cell: UITableViewCell) {
+        guard let indexPath = tableView.indexPath(for: cell) else {
+            return
+        }
+        print("shit its report func")
+        persons[indexPath.section].firstName = text
+    }
     
     private var addButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Добавить данные о ребенке", for: .normal)
-        button.backgroundColor = .yellow
+        button.backgroundColor = .white
         button.layer.cornerRadius = 5
-        button.layer.shadowColor = UIColor.red.cgColor
+        button.layer.shadowColor = UIColor.black.cgColor
         button.layer.shadowRadius = 3
         button.layer.shadowOffset = CGSize(width: 3, height: 2)
         button.layer.shadowOpacity = 10
@@ -34,22 +47,15 @@ class MainViewController: UIViewController {
     var numberOfSections: Int = 1
     var numberOfRowsInSection: Int = 5
     
-    var firstNameCell: UITableViewCell = UITableViewCell()
-    var lastNameCell: UITableViewCell = UITableViewCell()
-    var patronymicCell: UITableViewCell = UITableViewCell()
-    var ageCell: UITableViewCell = UITableViewCell()
-    var addChildCell: UITableViewCell = UITableViewCell()
-    
-    var firstNameTextField: UITextField = UITextField()
-    var lastNameTextField: UITextField = UITextField()
-    var patronymicTextField: UITextField = UITextField()
-    var ageTextField: UITextField = UITextField()
+   
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard (_:)))
         self.view.addGestureRecognizer(tapGesture)
+        self.tableView.addGestureRecognizer(tapGesture)
+        self.tableView.tableHeaderView?.addGestureRecognizer(tapGesture)
         
         view.addSubview(tableView)
         view.addSubview(addButton)
@@ -57,33 +63,7 @@ class MainViewController: UIViewController {
         setupTableView()
         view.backgroundColor = .orange
         addButton.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
-        
-        self.lastNameCell.backgroundColor = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 0.5)
-        self.lastNameTextField = UITextField(frame: CGRect(x: 15, y: 0, width: self.lastNameCell.contentView.bounds.width, height: 50))
-        self.lastNameTextField.placeholder = "Фамилия"
-        self.lastNameCell.addSubview(self.lastNameTextField)
-        
-        self.firstNameCell.backgroundColor = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 0.5)
-        self.firstNameTextField = UITextField(frame: CGRect(x: 15, y: 0, width: self.firstNameCell.contentView.bounds.width, height: 50))
-        self.firstNameTextField.placeholder = "Имя"
-        self.firstNameCell.addSubview(self.firstNameTextField)
-        
-        self.patronymicCell.backgroundColor = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 0.5)
-        self.patronymicTextField = UITextField(frame: CGRect(x: 15, y: 0, width: self.patronymicCell.contentView.bounds.width, height: 50))
-        self.patronymicTextField.placeholder = "Отчество"
-        self.patronymicCell.addSubview(self.patronymicTextField)
-        
-        
-        self.ageCell.backgroundColor = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 0.5)
-        self.ageTextField = UITextField(frame: CGRect(x: 15, y: 0, width: self.ageCell.contentView.bounds.width, height: 50))
-        self.ageTextField.placeholder = "Возраст"
-        ageTextField.keyboardType = .numberPad
-        ageTextField.textContentType = .telephoneNumber
-        self.ageCell.addSubview(self.ageTextField)
-        
-        self.addChildCell.backgroundColor = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 0.5)
-        self.addChildCell.textLabel?.text = "+ Добавить ребенка"
-        //ageTextField.backgroundColor = .red
+  
     }
     
     private func setupTableView() {
@@ -91,18 +71,26 @@ class MainViewController: UIViewController {
         tableView.dataSource = self
         tableView.tableFooterView = UIView()
         tableView.backgroundColor = .systemGroupedBackground
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
+        tableView.register(PersonCell.self, forCellReuseIdentifier: "Cell")
         
     }
     
     @objc private func addButtonTapped() {
         print("wow")
+        persons.append(Person())
+        if numberOfSections <= 6 {
         self.numberOfSections += 1
         tableView.reloadData()
+            if numberOfSections == 6 {
+                addButton.isHidden = true
+            }
+        } else {
+            print("too manu children")
+        }
     }
     
     @objc func dismissKeyboard (_ sender: UITapGestureRecognizer) {
-        [firstNameTextField, lastNameTextField, ageTextField, patronymicTextField].forEach {
+        [view, tableView].forEach {
             $0.resignFirstResponder()
         }
     }
@@ -120,33 +108,24 @@ class MainViewController: UIViewController {
 
 extension MainViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 4
-    }
-    
-    func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return persons.count
+    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-       // var cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-        var cell: UITableViewCell?
-        if indexPath.row == 0 {
-            cell = self.lastNameCell
-        } else if indexPath.row == 1 {
-            cell = self.firstNameCell
-        } else if indexPath.row == 2 {
-            cell = self.patronymicCell
-        } else if indexPath.row == 3 {
-            cell = self.ageCell
-        } else {
-            cell = UITableViewCell()
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as? PersonCell else {
+            return .init()
         }
-        
-        return cell!
+        cell.configure(with: persons[indexPath.section])
+        cell.delegate = self
+        return cell
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 50
+        return 260
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -163,3 +142,140 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
 }
+
+extension MainViewController: PersonDelegate {
+    func personDataChanged(for row: Int, with newValue: String, in field: String) {
+        
+        switch field {
+        case "firstName":
+            self.persons[row].firstName = newValue
+        case "lastName":
+            self.persons[row].lastName = newValue
+        case "patronymic":
+            self.persons[row].patronymic = newValue
+        case "age":
+            self.persons[row].age = Int(newValue)
+        default:
+            break
+        }
+        
+        print("hi i am mvc")
+        tableView.reloadData()
+    }
+    
+    
+    
+}
+
+protocol PersonDelegate: AnyObject {
+    func report(text: String, in: UITableViewCell)
+}
+
+
+
+final class PersonCell: UITableViewCell {
+    
+    var delegate: PersonDelegate? = MainViewController()
+    
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        
+        [firstNameTextField, lastNameTextField, patronymicTextField, ageTextField].forEach {
+            contentView.addSubview($0)
+        }
+//        firstNameTextField.addTarget(self, action: #selector(updateFirstName), for: .editingChanged)
+//        lastNameTextField.addTarget(self, action: #selector(updatelastName), for: .editingChanged)
+//        patronymicTextField.addTarget(self, action: #selector(updatePatronymic), for: .editingChanged)
+//        ageTextField.addTarget(self, action: #selector(updateAge), for: .editingChanged)
+        
+        firstNameTextField.delegate = self
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard (_:)))
+        self.contentView.addGestureRecognizer(tapGesture)
+        self.superview?.addGestureRecognizer(tapGesture)
+        self.superview?.superview?.addGestureRecognizer(tapGesture)
+    }
+    
+//    @objc func updateFirstName() {
+//        let newValue = self.firstNameTextField.text
+//        delegate?.personDataChanged(for: 0, with: newValue!, in: "firstName")
+//    }
+//    @objc func updatelastName() {
+//        let newValue = self.lastNameTextField.text
+//        delegate?.personDataChanged(for: 0, with: newValue!, in: "lastName")
+//    }
+//    @objc func updatePatronymic() {
+//        let newValue = self.patronymicTextField.text
+//        delegate?.personDataChanged(for: 0, with: newValue!, in: "patronymic")
+//    }
+//    @objc func updateAge() {
+//        let newValue = self.ageTextField.text
+//        delegate?.personDataChanged(for: 0, with: newValue!, in: "age")
+//    }
+    
+    private var firstNameTextField: UITextField = {
+    let TF = UITextField()
+        TF.placeholder = "Имя"
+    return TF
+    }()
+    
+    
+    private var lastNameTextField: UITextField = {
+        let TF = UITextField()
+            
+            TF.placeholder = "Фамилия"
+        return TF
+        }()
+    private var patronymicTextField: UITextField = {
+        let TF = UITextField()
+            
+            TF.placeholder = "Отчество"
+        return TF
+        }()
+    private var ageTextField: UITextField = {
+        let TF = UITextField()
+            TF.keyboardType = .numberPad
+            TF.placeholder = "Возраст"
+        return TF
+        }()
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+        
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        firstNameTextField.pin.horizontally(15).top(20).height(40)
+        lastNameTextField.pin.horizontally(15).below(of: firstNameTextField).marginTop(20).height(40)
+        patronymicTextField.pin.horizontally(15).below(of: lastNameTextField).marginTop(20).height(40)
+        ageTextField.pin.horizontally(15).below(of: patronymicTextField).marginTop(20).height(40)
+        
+    }
+    
+    @objc func dismissKeyboard (_ sender: UITapGestureRecognizer) {
+        [firstNameTextField, lastNameTextField, ageTextField, patronymicTextField].forEach {
+            $0.resignFirstResponder()
+        }
+        
+    }
+    
+    func configure(with person: Person) {
+        self.firstNameTextField.text = person.firstName
+        self.lastNameTextField.text = person.lastName
+        self.patronymicTextField.text = person.patronymic
+        guard let ageString = person.age else { return }
+        
+        self.ageTextField.text = "\(ageString)"
+    }
+    
+    
+}
+
+extension PersonCell: UITextFieldDelegate {
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        delegate?.report(text: textField.text ?? "", in: self)
+    }
+}
+
