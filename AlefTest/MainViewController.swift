@@ -53,6 +53,8 @@ class MainViewController: UIViewController {
         tableView.tableFooterView = UIView()
         tableView.backgroundColor = .systemGroupedBackground
         tableView.register(PersonCell.self, forCellReuseIdentifier: "Cell")
+        
+        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 50, right: 0)
     }
     
     @objc private func addButtonTapped() {
@@ -62,6 +64,7 @@ class MainViewController: UIViewController {
         }
         if tableView.numberOfSections == 6 {
             addButton.isHidden = true
+            tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         }
     }
     
@@ -115,6 +118,7 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
         }
         tableView.reloadData()
         addButton.isHidden = false
+        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 50, right: 0)
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
