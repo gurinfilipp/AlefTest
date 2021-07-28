@@ -136,7 +136,7 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
         if editingStyle == .delete {
             persons.remove(at: indexPath.section)
         }
-        tableView.deleteSections(IndexSet(integer: indexPath.section), with: .fade)
+        tableView.deleteSections(IndexSet(integer: indexPath.section), with: .automatic)
         tableView.reloadData()
         addButton.isHidden = false
         setInsetForButton()
