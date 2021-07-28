@@ -51,6 +51,10 @@ class MainViewController: UIViewController {
         tableView.register(PersonCell.self, forCellReuseIdentifier: "Cell")
         tableView.keyboardDismissMode = .onDrag
         setInsetForButton()
+        
+        
+        
+      //  tableView.tableHeaderView = DeleteView(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
     }
     
     private func setInsetForButton() {
@@ -113,6 +117,17 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
         case 0: return "Введите ваши данные"
         default: return "Введите данные \(section)-го ребенка"
         }
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        if section == 0 {
+            return DeleteView(frame: CGRect(), needsDeleteButton: false)
+        }
+        return DeleteView(frame: CGRect(), needsDeleteButton: true)
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 40
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
