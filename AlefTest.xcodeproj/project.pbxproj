@@ -14,6 +14,7 @@
 		C7EF5E1F26B0120300B2D20F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C7EF5E1D26B0120300B2D20F /* LaunchScreen.storyboard */; };
 		C7EF5E2726B0A80000B2D20F /* Person.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7EF5E2626B0A80000B2D20F /* Person.swift */; };
 		C7EF5E2926B16BF600B2D20F /* PersonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7EF5E2826B16BF600B2D20F /* PersonCell.swift */; };
+		C7EF5E2B26B1774D00B2D20F /* UIView+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7EF5E2A26B1774D00B2D20F /* UIView+extension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +28,7 @@
 		C7EF5E2026B0120300B2D20F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C7EF5E2626B0A80000B2D20F /* Person.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Person.swift; sourceTree = "<group>"; };
 		C7EF5E2826B16BF600B2D20F /* PersonCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonCell.swift; sourceTree = "<group>"; };
+		C7EF5E2A26B1774D00B2D20F /* UIView+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+extension.swift"; sourceTree = "<group>"; };
 		DE899F540824238542FA763B /* Pods-AlefTest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AlefTest.release.xcconfig"; path = "Target Support Files/Pods-AlefTest/Pods-AlefTest.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -78,6 +80,7 @@
 				C7EF5E1B26B0120300B2D20F /* Assets.xcassets */,
 				C7EF5E1D26B0120300B2D20F /* LaunchScreen.storyboard */,
 				C7EF5E2026B0120300B2D20F /* Info.plist */,
+				C7EF5E2A26B1774D00B2D20F /* UIView+extension.swift */,
 			);
 			path = AlefTest;
 			sourceTree = "<group>";
@@ -204,6 +207,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C7EF5E2B26B1774D00B2D20F /* UIView+extension.swift in Sources */,
 				C7EF5E2726B0A80000B2D20F /* Person.swift in Sources */,
 				C7EF5E2926B16BF600B2D20F /* PersonCell.swift in Sources */,
 				C7EF5E1726B0120100B2D20F /* MainViewController.swift in Sources */,

@@ -19,12 +19,8 @@ class MainViewController: UIViewController {
         let button = UIButton(type: .system)
         button.setTitle("Добавить данные о ребенке", for: .normal)
         button.backgroundColor = .white
-        button.layer.cornerRadius = 5
-        button.layer.shadowColor = UIColor.black.cgColor
-        button.layer.shadowRadius = 3
-        button.layer.shadowOffset = CGSize(width: 3, height: 2)
-        button.layer.shadowOpacity = 10
         button.tintColor = .black
+        button.addShadow()
         return button
     }()
     
