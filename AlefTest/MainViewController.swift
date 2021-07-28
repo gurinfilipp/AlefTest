@@ -27,17 +27,12 @@ class MainViewController: UIViewController {
         super.viewDidLoad()
         title = "Введите данные о семье"
         
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard (_:)))
-        self.view.addGestureRecognizer(tapGesture)
-        self.tableView.addGestureRecognizer(tapGesture)
-        self.tableView.tableHeaderView?.addGestureRecognizer(tapGesture)
-        
         [tableView,addButton].forEach {
             view.addSubview($0)
         }
         setupTableView()
         addButton.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
-
+        
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardDidHideNotification, object: nil)
     }
     
@@ -81,12 +76,6 @@ class MainViewController: UIViewController {
         }
     }
     
-    @objc func dismissKeyboard (_ sender: UITapGestureRecognizer) {
-        [view, tableView].forEach {
-            $0.resignFirstResponder()
-        }
-    }
-    
     @objc func keyboardWillHide(_ notification: Notification) {
         if addButton.isHidden {
             setInsetWithoutButton()
@@ -94,7 +83,7 @@ class MainViewController: UIViewController {
             setInsetForButton()
         }
     }
- 
+    
 }
 
 extension MainViewController: UITableViewDataSource, UITableViewDelegate {
@@ -151,15 +140,10 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
 
 extension MainViewController: PersonDelegate {
     
-    
-    
-    
     func scroll(to row: PersonCell) {
         guard let newIndexPath = tableView.indexPath(for: row) else {
             return
         }
-        print(newIndexPath.section + 1)
-        print("persons count is \(persons.count)")
         guard newIndexPath.section != 0 else {
             return
         }
@@ -168,7 +152,6 @@ extension MainViewController: PersonDelegate {
         }
         tableView.scrollToRow(at: newIndexPath, at: .top, animated: true)
     }
-    
     
     func report(text: String, in cell: UITableViewCell, field: String) {
         guard let indexPath = tableView.indexPath(for: cell) else {
