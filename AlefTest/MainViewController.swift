@@ -121,13 +121,13 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         if section == 0 {
-            return DeleteView(frame: CGRect(), needsDeleteButton: false)
+            return DeleteView(frame: CGRect(), needsDeleteButton: false, section: nil)
         }
-        return DeleteView(frame: CGRect(), needsDeleteButton: true)
+        return DeleteView(frame: CGRect(), needsDeleteButton: true, section: section)
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 40
+        return 50
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {

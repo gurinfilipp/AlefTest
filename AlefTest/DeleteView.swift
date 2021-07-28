@@ -13,30 +13,31 @@ class DeleteView: UIView {
     var deleteButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Удалить", for: .normal)
-        button.backgroundColor = .blue
         return button
     }()
     
-    var label: UILabel = UILabel()
+    var label: UILabel = {
+        let label = UILabel()
+        label.textAlignment = .center
+        label.textColor = .gray
+        return label
+    }()
     
-    
-    
-    
-    init(frame: CGRect, needsDeleteButton: Bool) {
+    init(frame: CGRect, needsDeleteButton: Bool, section: Int?) {
         super.init(frame: frame)
-        
-        backgroundColor = .green
-        
+
         if needsDeleteButton {
             self.addSubview(deleteButton)
-            label.text = "Инфа ребенка"
+            guard let childNumber = section else {
+                return
+            }
+            label.text = "Инфа \(childNumber)-го ребенка"
         } else {
             label.text = "Инфа моя"
         }
         addSubview(label)
-        label.backgroundColor = .red
-        label.textAlignment = .center
-        
+   
+        deleteButton.addTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
     }
     
     required init?(coder: NSCoder) {
@@ -48,7 +49,10 @@ class DeleteView: UIView {
         
         label.pin.vertically().left(15).sizeToFit(.height)
         deleteButton.pin.vertically().right(15).width(60)
-        
+    }
+    
+    @objc func deleteButtonTapped() {
+        print(#function)
     }
     
 }
