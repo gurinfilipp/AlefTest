@@ -8,6 +8,10 @@
 import UIKit
 import PinLayout
 
+protocol DeleteViewDelegate: AnyObject {
+    func deleteChild(for section: Int)
+}
+
 class DeleteView: UIView {
     
     var deleteButton: UIButton = {
@@ -23,9 +27,13 @@ class DeleteView: UIView {
         return label
     }()
     
+    weak var delegate: DeleteViewDelegate?
+    
     init(frame: CGRect, needsDeleteButton: Bool, section: Int?) {
         super.init(frame: frame)
 
+        
+        
         if needsDeleteButton {
             self.addSubview(deleteButton)
             guard let childNumber = section else {
@@ -52,7 +60,7 @@ class DeleteView: UIView {
     }
     
     @objc func deleteButtonTapped() {
-        print(#function)
+        delegate?.deleteChild(for: 1)
     }
     
 }

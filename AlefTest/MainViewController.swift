@@ -27,6 +27,7 @@ class MainViewController: UIViewController {
         super.viewDidLoad()
         title = "Введите данные о семье"
         
+        
         [tableView,addButton].forEach {
             view.addSubview($0)
         }
@@ -121,9 +122,15 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         if section == 0 {
-            return DeleteView(frame: CGRect(), needsDeleteButton: false, section: nil)
-        }
-        return DeleteView(frame: CGRect(), needsDeleteButton: true, section: section)
+            let view = DeleteView(frame: CGRect(), needsDeleteButton: false, section: nil)
+            view.delegate = self
+            return view
+        } else {
+        let view = DeleteView(frame: CGRect(), needsDeleteButton: true, section: section)
+            view.delegate = self
+            return view
+        
+    }
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -184,7 +191,12 @@ extension MainViewController: PersonDelegate {
     }
 }
 
-
+extension MainViewController: DeleteViewDelegate {
+    func deleteChild(for section: Int) {
+        self.persons.remove(at: section)
+        tableView.reloadData()
+    }
+}
 
 
 
