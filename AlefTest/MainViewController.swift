@@ -12,7 +12,8 @@ class MainViewController: UIViewController {
     
     private let tableView: UITableView = UITableView(frame: CGRect(), style: .insetGrouped)
     
-    private var persons: [Person] = []
+    private var persons: [Person] = [Person()]
+    private var numberOfSections: Int = 1
     
     private var addButton: UIButton = {
         let button = UIButton(type: .system)
@@ -27,56 +28,20 @@ class MainViewController: UIViewController {
         return button
     }()
     
-    var numberOfSections: Int = 1
-  //  var numberOfRowsInSection: Int = 5
-    
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        persons.append(Person())
+        title = "Введите данные о семье"
+        
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard (_:)))
         self.view.addGestureRecognizer(tapGesture)
         self.tableView.addGestureRecognizer(tapGesture)
         self.tableView.tableHeaderView?.addGestureRecognizer(tapGesture)
         
-        view.addSubview(tableView)
-        view.addSubview(addButton)
-        title = "Введите данные о семье"
+        [tableView,addButton].forEach {
+            view.addSubview($0)
+        }
         setupTableView()
-        view.backgroundColor = .orange
         addButton.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
-        
-    }
-    
-    private func setupTableView() {
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.tableFooterView = UIView()
-        tableView.backgroundColor = .systemGroupedBackground
-        tableView.register(PersonCell.self, forCellReuseIdentifier: "Cell")
-        
-    }
-    
-    @objc private func addButtonTapped() {
-        print("wow")
-        persons.append(Person())
-        if tableView.numberOfSections <= 6 {
-            self.numberOfSections += 1
-            tableView.reloadData()
-            if tableView.numberOfSections == 6 {
-                addButton.isHidden = true
-            }
-        } else {
-            print("too manu children")
-        }
-    }
-    
-    @objc func dismissKeyboard (_ sender: UITapGestureRecognizer) {
-        [view, tableView].forEach {
-            $0.resignFirstResponder()
-            
-        }
     }
     
     override func viewDidLayoutSubviews() {
@@ -86,8 +51,29 @@ class MainViewController: UIViewController {
         addButton.pin.horizontally(30).bottom(30).height(60)
     }
     
+    private func setupTableView() {
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.tableFooterView = UIView()
+        tableView.backgroundColor = .systemGroupedBackground
+        tableView.register(PersonCell.self, forCellReuseIdentifier: "Cell")
+    }
     
+    @objc private func addButtonTapped() {
+        persons.append(Person())
+        if tableView.numberOfSections <= 6 {
+            tableView.reloadData()
+        }
+        if tableView.numberOfSections == 6 {
+            addButton.isHidden = true
+        }
+    }
     
+    @objc func dismissKeyboard (_ sender: UITapGestureRecognizer) {
+        [view, tableView].forEach {
+            $0.resignFirstResponder()
+        }
+    }
 }
 
 extension MainViewController: UITableViewDataSource, UITableViewDelegate {
@@ -103,7 +89,6 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as? PersonCell else {
             return .init()
         }
-        
         cell.configure(with: persons[indexPath.section])
         cell.delegate = self
         return cell
@@ -116,11 +101,9 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
         case 0: return "Введите ваши данные"
-        default: return "Введите данные ребенка"
+        default: return "Введите данные \(section)-го ребенка"
         }
     }
-    
-    
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         if indexPath.section == 0 {
@@ -131,12 +114,8 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        
-        switch editingStyle {
-        case .delete:
+        if editingStyle == .delete {
             persons.remove(at: indexPath.section)
-        default:
-            fatalError()
         }
         tableView.reloadData()
         addButton.isHidden = false
@@ -150,10 +129,6 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
 
 extension MainViewController: PersonDelegate {
     
-    // !!!!!! У МЕНЯ ДВЕ СЕКЦИИ! ЗНАЧИТ НАВерное НАДО СДЕЛАТЬ 2 МАССИВА!!!!
-    
-    
-    
     func report(text: String, in cell: UITableViewCell, field: String) {
         guard let indexPath = tableView.indexPath(for: cell) else {
             return
@@ -164,17 +139,12 @@ extension MainViewController: PersonDelegate {
         case "Фамилия": persons[indexPath.section].lastName = text
         case "Отчество": persons[indexPath.section].patronymic = text
         case "Возраст": persons[indexPath.section].age = text
-        default: fatalError()
+        default: return
         }
-        print("shit its report func")
-        
     }
-    
 }
 
-protocol PersonDelegate: AnyObject {
-    func report(text: String, in: UITableViewCell, field: String)
-}
+
 
 
 

@@ -7,6 +7,10 @@
 
 import UIKit
 
+protocol PersonDelegate: AnyObject {
+    func report(text: String, in: UITableViewCell, field: String)
+}
+
 final class PersonCell: UITableViewCell {
     
     weak var delegate: PersonDelegate?
