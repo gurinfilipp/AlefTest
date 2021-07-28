@@ -75,17 +75,57 @@
 		C7EF5E1126B0120100B2D20F /* AlefTest */ = {
 			isa = PBXGroup;
 			children = (
-				C7EF5E1226B0120100B2D20F /* AppDelegate.swift */,
-				C7EF5E1626B0120100B2D20F /* MainViewController.swift */,
-				C7EF5E2826B16BF600B2D20F /* PersonCell.swift */,
-				C7EF5E2626B0A80000B2D20F /* Person.swift */,
-				C7EF5E1B26B0120300B2D20F /* Assets.xcassets */,
-				C7EF5E1D26B0120300B2D20F /* LaunchScreen.storyboard */,
-				C7EF5E2026B0120300B2D20F /* Info.plist */,
-				C7EF5E2A26B1774D00B2D20F /* UIView+extension.swift */,
-				C7EF5E2C26B18B7000B2D20F /* DeleteView.swift */,
+				C7EF5E2E26B1959B00B2D20F /* Model */,
+				C7EF5E2F26B195A400B2D20F /* View */,
+				C7EF5E3026B195A700B2D20F /* Controller */,
+				C7EF5E3226B195B300B2D20F /* Extensions */,
+				C7EF5E3126B195AB00B2D20F /* Additional */,
 			);
 			path = AlefTest;
+			sourceTree = "<group>";
+		};
+		C7EF5E2E26B1959B00B2D20F /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				C7EF5E2626B0A80000B2D20F /* Person.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		C7EF5E2F26B195A400B2D20F /* View */ = {
+			isa = PBXGroup;
+			children = (
+				C7EF5E2C26B18B7000B2D20F /* DeleteView.swift */,
+				C7EF5E2826B16BF600B2D20F /* PersonCell.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		C7EF5E3026B195A700B2D20F /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				C7EF5E1626B0120100B2D20F /* MainViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		C7EF5E3126B195AB00B2D20F /* Additional */ = {
+			isa = PBXGroup;
+			children = (
+				C7EF5E1226B0120100B2D20F /* AppDelegate.swift */,
+				C7EF5E1D26B0120300B2D20F /* LaunchScreen.storyboard */,
+				C7EF5E1B26B0120300B2D20F /* Assets.xcassets */,
+				C7EF5E2026B0120300B2D20F /* Info.plist */,
+			);
+			path = Additional;
+			sourceTree = "<group>";
+		};
+		C7EF5E3226B195B300B2D20F /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				C7EF5E2A26B1774D00B2D20F /* UIView+extension.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 		E983ADD7D6C343353B9190C8 /* Pods */ = {
@@ -357,7 +397,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = SN4W946MBP;
-				INFOPLIST_FILE = AlefTest/Info.plist;
+				INFOPLIST_FILE = AlefTest/Additional/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -377,7 +417,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = SN4W946MBP;
-				INFOPLIST_FILE = AlefTest/Info.plist;
+				INFOPLIST_FILE = AlefTest/Additional/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

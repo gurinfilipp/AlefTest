@@ -12,6 +12,7 @@ protocol DeleteViewDelegate: AnyObject {
     func deleteChild(for section: Int)
 }
 
+
 class DeleteView: UIView {
     
     var section: Int?
@@ -19,6 +20,7 @@ class DeleteView: UIView {
     var deleteButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Удалить", for: .normal)
+        button.tintColor = .red
         return button
     }()
     
@@ -33,7 +35,7 @@ class DeleteView: UIView {
     
     init(frame: CGRect, needsDeleteButton: Bool, section: Int?) {
         super.init(frame: frame)
-
+        
         self.section = section
         
         if needsDeleteButton {
@@ -46,7 +48,7 @@ class DeleteView: UIView {
             label.text = "Ваши данные"
         }
         addSubview(label)
-   
+        
         deleteButton.addTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
     }
     

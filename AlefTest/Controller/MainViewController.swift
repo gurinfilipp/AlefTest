@@ -27,7 +27,6 @@ class MainViewController: UIViewController {
         super.viewDidLoad()
         title = "Введите данные о семье"
         
-        
         [tableView,addButton].forEach {
             view.addSubview($0)
         }
@@ -52,10 +51,6 @@ class MainViewController: UIViewController {
         tableView.register(PersonCell.self, forCellReuseIdentifier: "Cell")
         tableView.keyboardDismissMode = .onDrag
         setInsetForButton()
-        
-        
-        
-      //  tableView.tableHeaderView = DeleteView(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
     }
     
     private func setInsetForButton() {
@@ -113,24 +108,16 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
         return 260
     }
     
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        switch section {
-        case 0: return "Введите ваши данные"
-        default: return "Введите данные \(section)-го ребенка"
-        }
-    }
-    
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         if section == 0 {
             let view = DeleteView(frame: CGRect(), needsDeleteButton: false, section: nil)
             view.delegate = self
             return view
         } else {
-        let view = DeleteView(frame: CGRect(), needsDeleteButton: true, section: section)
+            let view = DeleteView(frame: CGRect(), needsDeleteButton: true, section: section)
             view.delegate = self
             return view
-        
-    }
+        }
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -149,15 +136,20 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
         if editingStyle == .delete {
             persons.remove(at: indexPath.section)
         }
+        tableView.deleteSections(IndexSet(integer: indexPath.section), with: .fade)
         tableView.reloadData()
         addButton.isHidden = false
         setInsetForButton()
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         tableView.scrollToRow(at: indexPath, at: .top, animated: true)
     }
     
+    func tableView(_ tableView: UITableView, titleForDeleteConfirmationButtonForRowAt indexPath: IndexPath) -> String? {
+        return "Удалить данные о ребенке"
+    }
 }
 
 extension MainViewController: PersonDelegate {
@@ -179,7 +171,6 @@ extension MainViewController: PersonDelegate {
         guard let indexPath = tableView.indexPath(for: cell) else {
             return
         }
-        
         switch field {
         case "Имя": persons[indexPath.section].firstName = text
         case "Фамилия": persons[indexPath.section].lastName = text
@@ -194,7 +185,10 @@ extension MainViewController: PersonDelegate {
 extension MainViewController: DeleteViewDelegate {
     func deleteChild(for section: Int) {
         self.persons.remove(at: section)
+        tableView.deleteSections(IndexSet(integer: section), with: .automatic)
         tableView.reloadData()
+        addButton.isHidden = false
+        setInsetForButton()
     }
 }
 

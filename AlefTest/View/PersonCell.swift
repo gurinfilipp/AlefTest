@@ -12,6 +12,7 @@ protocol PersonDelegate: AnyObject {
     func scroll(to row: PersonCell)
 }
 
+
 final class PersonCell: UITableViewCell {
     
     weak var delegate: PersonDelegate?
@@ -83,11 +84,7 @@ extension PersonCell: UITextFieldDelegate {
         textField.resignFirstResponder()
         return true
     }
-    
 }
-
-
-
 
 extension PersonCell {
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
