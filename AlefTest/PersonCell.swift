@@ -9,6 +9,7 @@ import UIKit
 
 protocol PersonDelegate: AnyObject {
     func report(text: String, in: UITableViewCell, field: String)
+    func scroll(to row: PersonCell)
 }
 
 final class PersonCell: UITableViewCell {
@@ -89,5 +90,7 @@ extension PersonCell: UITextFieldDelegate {
 
 
 extension PersonCell {
-    
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        ((delegate?.scroll(to: self)) != nil)
+    }
 }

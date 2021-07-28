@@ -10,8 +10,7 @@ import PinLayout
 
 class MainViewController: UIViewController {
     
-    private let tableView: UITableView = UITableView(frame: CGRect(), style: .insetGrouped)
-    
+    private var tableView: UITableView = UITableView(frame: CGRect(), style: .insetGrouped)
     private var persons: [Person] = [Person()]
     private var numberOfSections: Int = 1
     
@@ -38,6 +37,8 @@ class MainViewController: UIViewController {
         }
         setupTableView()
         addButton.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
+
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardDidHideNotification, object: nil)
     }
     
     override func viewDidLayoutSubviews() {
@@ -53,8 +54,20 @@ class MainViewController: UIViewController {
         tableView.tableFooterView = UIView()
         tableView.backgroundColor = .systemGroupedBackground
         tableView.register(PersonCell.self, forCellReuseIdentifier: "Cell")
-        
-        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 50, right: 0)
+        tableView.keyboardDismissMode = .onDrag
+        setInsetForButton()
+    }
+    
+    private func setInsetForButton() {
+        tableView.contentInset.bottom = 50
+    }
+    
+    private func setInsetWithoutButton() {
+        tableView.contentInset.bottom = 0
+    }
+    
+    private func setInsetWithKeyboard() {
+        tableView.contentInset.bottom = 370
     }
     
     @objc private func addButtonTapped() {
@@ -64,7 +77,7 @@ class MainViewController: UIViewController {
         }
         if tableView.numberOfSections == 6 {
             addButton.isHidden = true
-            tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+            setInsetWithoutButton()
         }
     }
     
@@ -73,6 +86,15 @@ class MainViewController: UIViewController {
             $0.resignFirstResponder()
         }
     }
+    
+    @objc func keyboardWillHide(_ notification: Notification) {
+        if addButton.isHidden {
+            setInsetWithoutButton()
+        } else {
+            setInsetForButton()
+        }
+    }
+ 
 }
 
 extension MainViewController: UITableViewDataSource, UITableViewDelegate {
@@ -118,16 +140,35 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
         }
         tableView.reloadData()
         addButton.isHidden = false
-        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 50, right: 0)
+        setInsetForButton()
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
+        tableView.scrollToRow(at: indexPath, at: .top, animated: true)
     }
     
 }
 
 extension MainViewController: PersonDelegate {
+    
+    
+    
+    
+    func scroll(to row: PersonCell) {
+        guard let newIndexPath = tableView.indexPath(for: row) else {
+            return
+        }
+        print(newIndexPath.section + 1)
+        print("persons count is \(persons.count)")
+        guard newIndexPath.section != 0 else {
+            return
+        }
+        if newIndexPath.section + 1 == persons.count {
+            setInsetWithKeyboard()
+        }
+        tableView.scrollToRow(at: newIndexPath, at: .top, animated: true)
+    }
+    
     
     func report(text: String, in cell: UITableViewCell, field: String) {
         guard let indexPath = tableView.indexPath(for: cell) else {
@@ -141,6 +182,7 @@ extension MainViewController: PersonDelegate {
         case "Возраст": persons[indexPath.section].age = text
         default: return
         }
+        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
     }
 }
 
