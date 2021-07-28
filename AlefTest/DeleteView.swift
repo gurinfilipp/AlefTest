@@ -14,6 +14,8 @@ protocol DeleteViewDelegate: AnyObject {
 
 class DeleteView: UIView {
     
+    var section: Int?
+    
     var deleteButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Удалить", for: .normal)
@@ -32,16 +34,16 @@ class DeleteView: UIView {
     init(frame: CGRect, needsDeleteButton: Bool, section: Int?) {
         super.init(frame: frame)
 
-        
+        self.section = section
         
         if needsDeleteButton {
             self.addSubview(deleteButton)
             guard let childNumber = section else {
                 return
             }
-            label.text = "Инфа \(childNumber)-го ребенка"
+            label.text = "Данные \(childNumber)-го ребенка"
         } else {
-            label.text = "Инфа моя"
+            label.text = "Ваши данные"
         }
         addSubview(label)
    
@@ -60,7 +62,10 @@ class DeleteView: UIView {
     }
     
     @objc func deleteButtonTapped() {
-        delegate?.deleteChild(for: 1)
+        guard let section = self.section else {
+            return
+        }
+        delegate?.deleteChild(for: section)
     }
     
 }
